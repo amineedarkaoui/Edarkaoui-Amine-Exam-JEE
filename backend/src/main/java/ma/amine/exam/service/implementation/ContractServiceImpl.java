@@ -6,21 +6,29 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import ma.amine.exam.dto.ContractDto;
+import ma.amine.exam.mapper.ClientMapper;
 import ma.amine.exam.mapper.ContractMapper;
 import ma.amine.exam.model.Contract;
 import ma.amine.exam.repository.ContractRepository;
+import ma.amine.exam.service.ClientService;
 import ma.amine.exam.service.ContractService;
 
 @Service
 @RequiredArgsConstructor
 public class ContractServiceImpl implements ContractService {
+    private final ClientService clientService;
+
     private final ContractRepository contractRepository;
+
     private final ContractMapper contractMapper;
+    private final ClientMapper clientMapper;
 
     @Override
     public ContractDto createContract(ContractDto contract) {
-        Contract savedContract = contractRepository.save(contractMapper.toEntity(contract));
-        return contractMapper.toDto(savedContract);
+        Contract contractEntity = contractMapper.toEntity(contract);
+        contractEntity.setClient(clientMapper.toEntity(clientService.getClientById(contract.getClientId())));
+
+        return contractMapper.toDto(contractRepository.save(contractEntity));
     }
 
     @Override
