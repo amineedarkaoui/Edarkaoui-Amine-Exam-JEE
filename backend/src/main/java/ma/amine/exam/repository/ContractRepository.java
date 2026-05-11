@@ -1,0 +1,7 @@
+package ma.amine.exam.repository;
+
+import ma.amine.exam.model.Contract;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ContractRepository extends JpaRepository<Contract, Long> {
+}
